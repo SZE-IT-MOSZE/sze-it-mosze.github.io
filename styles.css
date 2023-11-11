@@ -1,0 +1,57 @@
+:root {
+    --bs-body-bg: var(--bs-gray-100);
+  }
+
+body {
+    background-color: #134960;
+    color: white;
+}
+
+a {
+    color: #2DE0DD;
+}
+
+.nav-link {
+    color: #2DE0DD;
+}
+
+h1 {
+    margin: 40;
+
+}
+
+.bg-body-tertiary {
+    background-color: #66CEFA;
+}
+
+.container-lg {
+    background-color: #66CEFA;
+}
+
+#projtitle {
+    font-size: 2em;
+    color: #366D85;
+}
+
+#navcont1 {
+    background-color: #366D85;
+    border-color: #66CEFA;
+    
+    margin: 3;
+}
+
+.carousel-item {
+    background-color: #366D85;
+}
+
+.accordion-button {
+    background-color: #66CEFA;
+}
+
+#hallofffame-inner {
+    margin: 100px;
+}
+
+img {
+    width: 600px;
+}
