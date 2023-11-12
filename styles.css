@@ -48,10 +48,15 @@ h1 {
     background-color: #66CEFA;
 }
 
-#hallofffame-inner {
-    margin: 100px;
-}
+
 
 img {
     width: 600px;
+}
+
+.card {
+    margin-top: 2em;
+    border-color: #2DE0DD;
+    border-radius: 2px;
+    border-width: 2px;
 }
