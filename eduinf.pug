@@ -1,0 +1,35 @@
+// Basic information
+div(class="accordion" id="basicinformation")
+    div(class="accordion-item")
+        h5(class="accordion-header") 
+            button(class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collitembasinf" aria-expanded="false" aria-controls="collitembasinf") Alapinformációk
+        div(id="collitembasinf" class="accordion-collapse collapse" data-bs-parent="#basicinformation")
+            div(class="accordion-body text-left")                                        
+                ul 
+                    li Tanszék: 
+                        a(href="https://it.sze.hu/kezdolap") SZE-IT
+// Current educators
+div(class="accordion" id="educators")                        
+    div(class="accordion-item")
+        h5(class="accordion-header") 
+            button(class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collitemeducators" aria-expanded="false" aria-controls="collitemeducators") Oktatók
+        div(id="collitemeducators" class="accordion-collapse collapse" data-bs-parent="#educators")
+            div(class="accordion-body text-left")  
+                ul
+                    li Hajdu Csaba, SZE-IT
+                    li Dr. Hatwágner Miklós, SZE-IT
+// Former educators
+div(class="accordion" id="feducators")
+    div(class="accordion-item")
+        h6(class="accordion-header") 
+            button(class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collitemfeducators" aria-expanded="false" aria-controls="collitemfeducators") Korábbi Oktatók
+        div(id="collitemfeducators" class="accordion-collapse collapse" data-bs-parent="#feducators")
+            div(class="accordion-body text-left")  
+                ul 
+                    li Dr. habil. Csapó Ádám                        
+                    li Dr. Hegyháti Máté
+                    li Dr. Ősz Olivér
+                    li Dr. Smidla József

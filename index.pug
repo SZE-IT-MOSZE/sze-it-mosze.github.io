@@ -24,52 +24,12 @@ html(lang="hu")
         div(class="container")
             div(class="row")                
                 div(class="col")
-                    div(class="card")
-                        div(class="card-body")
-                            ul 
-                                li Modern Szoftverfejlesztési Eszközök
-                                li GNKB_INTM06 
-                                li Széchenyi István Egyetem 
-                                li Kreditszám: 3
+                    include info_card.pug
                 div(class="col-10")
                     h4(id="generalinf") Általános
                         p
                     h4(id="eduinf") Oktatási információk
-                        // Basic information
-                        div(class="accordion" id="basicinformation")
-                            div(class="accordion-item")
-                                h5(class="accordion-header") 
-                                    button(class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collitembasinf" aria-expanded="false" aria-controls="collitembasinf") Alapinformációk
-                                div(id="collitembasinf" class="accordion-collapse collapse" data-bs-parent="#basicinformation")
-                                    div(class="accordion-body text-left")                                        
-                                        ul 
-                                            li Tanszék: 
-                                                a(href="https://it.sze.hu/kezdolap") SZE-IT
-                        // Current educators
-                        div(class="accordion" id="educators")                        
-                            div(class="accordion-item")
-                                h5(class="accordion-header") 
-                                    button(class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collitemeducators" aria-expanded="false" aria-controls="collitemeducators") Oktatók
-                                div(id="collitemeducators" class="accordion-collapse collapse" data-bs-parent="#educators")
-                                    div(class="accordion-body text-left")  
-                                        ul
-                                            li Hajdu Csaba, SZE-IT
-                                            li Dr. Hatwágner Miklós, SZE-IT
-                        // Former educators
-                        div(class="accordion" id="feducators")
-                            div(class="accordion-item")
-                                h6(class="accordion-header") 
-                                    button(class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collitemfeducators" aria-expanded="false" aria-controls="collitemfeducators") Korábbi Oktatók
-                                div(id="collitemfeducators" class="accordion-collapse collapse" data-bs-parent="#feducators")
-                                    div(class="accordion-body text-left")  
-                                        ul 
-                                            li Dr. habil. Csapó Ádám                        
-                                            li Dr. Hegyháti Máté
-                                            li Dr. Ősz Olivér
-                                            li Dr. Smidla József
+                        include eduinf.pug
                     h4(id="hhalloffame") Dicsőségcsarnok
                     div(class="carousel slide" id="halloffame")
                         div(class="carousel-inner" id="hallofffame-inner")
@@ -81,56 +41,7 @@ html(lang="hu")
                             div(class="carousel-item")
                                 div(class="container")
                                     h5 2022
-                                    div(class="accordion" id="best2022")
-                                        div(class="accordion-item")
-                                            h5(class="accordion-header") 
-                                                button(class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                    data-bs-target="#collitem1" aria-expanded="false" aria-controls="collitem1") LonelyLoners
-                                            div(id="collitem1" class="accordion-collapse collapse" data-bs-parent="#best2022")
-                                                div(class="accordion-body text-left")                                                
-                                                    strong Történetünk szerint LyRs az árva robot elhagyja a kihalt Földet, hogy teljesítse alkotói utolsó kivánságát...
-                                                    br
-                                                    ul
-                                                        li A játék command alapú, különböző parancsszavakkal lehet irányítani főszereplőnket.
-                                                        li 
-                                                            strong Cél: 
-                                                            p A játék célja, hogy saját döntéseinkkel befolyásoljuk LyRs döntéseit és így a játék történéseit. Vannak pozitív és negatív döntések, csupán rajtunk állnak hogy éppen melyiket válasszuk.
-                                                        li Megvalósítás: C++, SDL
-                                                        li 
-                                                            a(href="https://github.com/SZE-IT-MOSZE/mosze-semester-project-lonelyloners") Github repository
-                                                        li 
-                                                            a(href="https://www.youtube.com/watch?v=b1xvjFr0ZNE") Videó #1
-                                                        li 
-                                                            a(href="https://youtu.be/vwx9xpUJWVk") Videó #2
-                                                    img(src="halloffame/2022/lonelyloners.png")
-                                                    img(src="halloffame/2022/lonelyloners2.png")
-                                    
-                                        div(class="accordion-item")
-                                            h5(class="accordion-header") 
-                                                button(class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                    data-bs-target="#collitem2" aria-expanded="false" aria-controls="collitem2") Hellfire
-                                            div(id="collitem2" class="accordion-collapse collapse" data-bs-parent="#best2022")
-                                                div(class="accordion-body text-left")                                                
-                                                    ul
-                                                        li 
-                                                            a(href="https://github.com/SZE-IT-MOSZE/mosze-semester-project-hellfire") Github repository
-                                                        li 
-                                                            a(href="https://youtu.be/5npTKX_MJ0U") Videó #1                                                    
-                                                    img(src="halloffame/2022/hellfire1.png")
-                                                    img(src="halloffame/2022/hellfire2.png")
-                                        
-                                        div(class="accordion-item")
-                                            h5(class="accordion-header") 
-                                                button(class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                    data-bs-target="#collitem3" aria-expanded="false" aria-controls="collitem3") Gitanos
-                                            div(id="collitem3" class="accordion-collapse collapse" data-bs-parent="#best2022")
-                                                div(class="accordion-body text-left")
-                                                    ul
-                                                        li 
-                                                            a(href="https://github.com/SZE-IT-MOSZE/mosze-semester-project-gitanos") Github repository
-                                                        li 
-                                                            a(href="https://www.youtube.com/watch?v=v2Qiff0fLGs&t") Videó #1
-                                                    img(src="halloffame/2022/gitanos.png")
+                                    include best_2022.pug
                     button(class="carousel-control-prev" type="button" data-bs-target="#halloffame" data-bs-slide="prev")
                         span(class="carousel-control-prev-icon")
                         span(class="visually-hidden") Previous
