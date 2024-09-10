@@ -73,10 +73,12 @@ html(lang="hu")
                     h4(id="hhalloffame") Dicsőségcsarnok
                     div(class="carousel slide" id="halloffame")
                         div(class="carousel-inner" id="hallofffame-inner")
-                            div(class="carousel-item")
+                            div(class="carousel-item active")
                                 div(class="container")
                                     h5 2023
-                            div(class="carousel-item active")
+                                    include best_2023.pug
+                            // 2022
+                            div(class="carousel-item")
                                 div(class="container")
                                     h5 2022
                                     div(class="accordion" id="best2022")
@@ -122,20 +124,13 @@ html(lang="hu")
                                                 button(class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
                                                     data-bs-target="#collitem3" aria-expanded="false" aria-controls="collitem3") Gitanos
                                             div(id="collitem3" class="accordion-collapse collapse" data-bs-parent="#best2022")
-                                                div(class="accordion-body text-left")                                                
-                                                    
+                                                div(class="accordion-body text-left")
                                                     ul
                                                         li 
                                                             a(href="https://github.com/SZE-IT-MOSZE/mosze-semester-project-gitanos") Github repository
                                                         li 
                                                             a(href="https://www.youtube.com/watch?v=v2Qiff0fLGs&t") Videó #1
                                                     img(src="halloffame/2022/gitanos.png")
-                                                    
-
-                                            
-                                                    
-                                    
-                                        
                     button(class="carousel-control-prev" type="button" data-bs-target="#halloffame" data-bs-slide="prev")
                         span(class="carousel-control-prev-icon")
                         span(class="visually-hidden") Previous
