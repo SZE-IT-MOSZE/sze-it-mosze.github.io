@@ -20,6 +20,7 @@ const hallOfFame = defineCollection({
         intro: z.string().optional(),
         description: z.string().optional(),
         extraParagraphs: z.array(z.string()).optional(),
+        implementationTags: z.array(z.string()).optional(),
         bullets: z.array(bulletSchema),
         images: z.array(z.string()).optional(),
       }),

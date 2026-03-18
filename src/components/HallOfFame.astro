@@ -13,6 +13,7 @@ interface Project {
   intro?: string;
   description?: string;
   extraParagraphs?: string[];
+  implementationTags?: string[];
   bullets: Bullet[];
   images?: string[];
 }
@@ -59,6 +60,15 @@ const { years } = Astro.props as { years: HallYear[] };
                     >
                       <div class="accordion-body">
                         <div class="panel-kicker">Featured Build</div>
+                        {
+                          project.implementationTags?.length ? (
+                            <div class="implementation-tags" aria-label="Implementation tags">
+                              {project.implementationTags.map((tag) => (
+                                <span class="implementation-tag">{tag}</span>
+                              ))}
+                            </div>
+                          ) : null
+                        }
                         {project.intro ? <p><strong>{project.intro}</strong></p> : null}
                         {project.description ? <p>{project.description}</p> : null}
                         {
@@ -108,7 +118,7 @@ const { years } = Astro.props as { years: HallYear[] };
     class="carousel-control-prev"
     type="button"
     data-bs-target="#halloffame"
-    data-bs-slide="prev"
+    data-bs-slide="next"
   >
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Previous</span>
@@ -117,7 +127,7 @@ const { years } = Astro.props as { years: HallYear[] };
     class="carousel-control-next"
     type="button"
     data-bs-target="#halloffame"
-    data-bs-slide="next"
+    data-bs-slide="prev"
   >
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
