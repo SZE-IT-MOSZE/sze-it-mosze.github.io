@@ -1,0 +1,81 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import EducationAccordion from "../components/EducationAccordion.astro";
+import HallOfFame from "../components/HallOfFame.astro";
+import InfoCard from "../components/InfoCard.astro";
+import { educationSections, infoItems } from "../data/site";
+
+const hallOfFameYears = (await getCollection("hall-of-fame"))
+  .map((entry) => ({
+    year: String(entry.data.year),
+    id: `best${entry.data.year}`,
+    projects: entry.data.projects,
+  }))
+  .sort((left, right) => Number(right.year) - Number(left.year));
+---
+
+<BaseLayout title="Modern Szoftverfejlesztesi Eszkozok">
+  <header class="site-header">
+    <nav class="container nav-shell">
+      <a class="brand-mark" href="#top">MOSZE</a>
+      <div class="nav-cluster" id="mainNav">
+        <a class="nav-link" href="#generalinf">Altalanos</a>
+        <a class="nav-link" href="#eduinf">Oktatasi informaciok</a>
+        <a class="nav-link" href="#hhalloffame">Dicsosegcsarnok</a>
+      </div>
+    </nav>
+
+    <section class="container hero-panel" id="top">
+      <div class="hero-copy">
+        <div class="panel-kicker">SZE // Digital Course Interface</div>
+        <h1 id="projtitle">Modern szoftverfejlesztesi eszkozok</h1>
+        <p class="hero-lead">
+          A targy soran a hallgatok megismerik a modern szoftverfejlesztesi
+          technikakat. Ezek koze tartozik a verziokezeles, dokumentacio,
+          teszteles, CI/CD folyamatok, virtualizalas, monitorozas, promptolasi
+          technikak, agens alapu technikak.
+        </p>
+        <div class="hero-actions">
+          <a class="cta-primary" href="#eduinf">Tanulmanyi modulok</a>
+          <a class="cta-secondary" href="#hhalloffame">Project archive</a>
+        </div>
+      </div>
+
+      <div class="hero-side">
+        <div class="hero-chip">Szechenyi Istvan Egyetem</div>
+        <InfoCard items={infoItems} />
+      </div>
+    </section>
+  </header>
+
+  <main class="container site-main">
+    <section class="content-panel general-panel" id="generalinf">
+      <div class="section-heading">
+        <div class="panel-kicker">Overview</div>
+        <h2>Altalanos</h2>
+      </div>
+      <p>
+        Ez a felulet a kurzus kozponti pontja: gyors tajekozodast ad a tantargyrol,
+        osszegyujti az oktatasi informaciokat, es archivumba rendezi a kiemelt
+        hallgatoi projekteket.
+      </p>
+    </section>
+
+    <section class="content-panel" id="eduinf">
+      <div class="section-heading">
+        <div class="panel-kicker">Knowledge Matrix</div>
+        <h2>Oktatasi informaciok</h2>
+      </div>
+      <EducationAccordion sections={educationSections} />
+    </section>
+
+    <section class="content-panel" id="hhalloffame">
+      <div class="section-heading">
+        <div class="panel-kicker">Project Archive</div>
+        <h2>Dicsosegcsarnok</h2>
+      </div>
+      <HallOfFame years={hallOfFameYears} />
+    </section>
+  </main>
+</BaseLayout>

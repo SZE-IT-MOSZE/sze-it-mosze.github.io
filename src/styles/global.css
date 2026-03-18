@@ -1,0 +1,453 @@
+:root {
+  --bg: #060816;
+  --bg-soft: #0b1330;
+  --panel: rgba(10, 18, 42, 0.74);
+  --panel-strong: rgba(7, 14, 35, 0.9);
+  --line: rgba(110, 238, 255, 0.22);
+  --line-strong: rgba(110, 238, 255, 0.5);
+  --text: #d9f8ff;
+  --muted: #8eb7cc;
+  --cyan: #6ef0ff;
+  --teal: #38ffc3;
+  --pink: #ff4fd8;
+  --gold: #ffd166;
+  --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  position: relative;
+  overflow-x: hidden;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 79, 216, 0.16), transparent 28%),
+    radial-gradient(circle at 80% 18%, rgba(56, 255, 195, 0.12), transparent 24%),
+    radial-gradient(circle at 50% 80%, rgba(110, 240, 255, 0.12), transparent 22%),
+    linear-gradient(145deg, #040611 0%, #081021 45%, #040813 100%);
+  color: var(--text);
+  font-family: "Space Grotesk", sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 70px 70px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
+  opacity: 0.32;
+}
+
+a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--teal);
+}
+
+.page-shell,
+.grid-overlay,
+.page-glow {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+}
+
+.grid-overlay {
+  background: linear-gradient(transparent 0%, rgba(255, 255, 255, 0.02) 100%);
+  opacity: 0.4;
+}
+
+.page-glow {
+  filter: blur(80px);
+  opacity: 0.5;
+}
+
+.page-glow-left {
+  background: radial-gradient(circle at 20% 20%, rgba(255, 79, 216, 0.28), transparent 32%);
+}
+
+.page-glow-right {
+  background: radial-gradient(circle at 80% 10%, rgba(56, 255, 195, 0.2), transparent 30%);
+}
+
+.site-header,
+.site-main {
+  position: relative;
+  z-index: 1;
+}
+
+.site-header {
+  padding: 1.25rem 0 0;
+}
+
+.nav-shell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 1.2rem;
+  background: rgba(5, 12, 28, 0.74);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
+}
+
+.brand-mark,
+#projtitle,
+.panel-title,
+.section-heading h2,
+.year-header h5,
+.accordion-button {
+  font-family: "Orbitron", sans-serif;
+}
+
+.brand-mark {
+  color: var(--text);
+  letter-spacing: 0.22em;
+  font-size: 0.92rem;
+}
+
+.nav-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.nav-link {
+  color: var(--muted);
+  padding: 0.55rem 0.95rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.76rem;
+}
+
+.nav-link:hover {
+  color: var(--text);
+  border-color: var(--line);
+  background: rgba(110, 240, 255, 0.08);
+}
+
+.hero-panel {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: 2.4rem 0 1.2rem;
+  align-items: stretch;
+}
+
+.hero-copy,
+.hero-side,
+.content-panel,
+.course-card,
+.hall-of-fame-year {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(11, 19, 48, 0.9), rgba(6, 10, 24, 0.9));
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
+}
+
+.hero-copy,
+.content-panel,
+.course-card,
+.hall-of-fame-year,
+.hero-side {
+  border-radius: 1.6rem;
+}
+
+.hero-copy::before,
+.hero-side::before,
+.content-panel::before,
+.course-card::before,
+.hall-of-fame-year::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(110, 240, 255, 0.1),
+    transparent 32%,
+    transparent 68%,
+    rgba(255, 79, 216, 0.1)
+  );
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.hero-copy {
+  padding: 2.2rem;
+}
+
+#projtitle {
+  margin: 0.35rem 0 1rem;
+  font-size: clamp(2.1rem, 4.4vw, 4rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-shadow: 0 0 25px rgba(110, 240, 255, 0.25);
+  max-width: 12ch;
+  text-wrap: balance;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+.hero-lead {
+  max-width: 40rem;
+  color: var(--muted);
+  font-size: 1.06rem;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 1.7rem;
+}
+
+.cta-primary,
+.cta-secondary,
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.cta-primary,
+.cta-secondary {
+  padding: 0.9rem 1.2rem;
+  font-size: 0.78rem;
+}
+
+.cta-primary {
+  color: #041019;
+  background: linear-gradient(90deg, var(--cyan), var(--teal));
+  box-shadow: 0 10px 30px rgba(56, 255, 195, 0.2);
+}
+
+.cta-secondary {
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  background: rgba(110, 240, 255, 0.06);
+}
+
+.hero-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 28rem;
+}
+
+.hero-chip {
+  align-self: flex-start;
+  padding: 0.65rem 1rem;
+  color: var(--gold);
+  border: 1px solid rgba(255, 209, 102, 0.3);
+  background: rgba(255, 209, 102, 0.08);
+  font-size: 0.72rem;
+}
+
+.site-main {
+  display: grid;
+  gap: 1.4rem;
+  padding-bottom: 3rem;
+}
+
+.content-panel {
+  padding: 1.6rem;
+}
+
+.general-panel p,
+.accordion-body p,
+.accordion-body li,
+.course-card li {
+  position: relative;
+  z-index: 1;
+}
+
+.section-heading,
+.year-header {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1rem;
+}
+
+.section-heading h2,
+.year-header h5,
+.panel-title {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.section-heading h2 {
+  font-size: clamp(1.4rem, 2vw, 2rem);
+}
+
+.panel-kicker {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 0.5rem;
+  color: var(--teal);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.course-card {
+  margin: 0;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.course-card ul,
+.accordion-body ul {
+  padding-left: 1.1rem;
+}
+
+.course-card li,
+.accordion-body li {
+  margin-bottom: 0.65rem;
+  color: var(--muted);
+}
+
+.accordion {
+  position: relative;
+  z-index: 1;
+}
+
+.accordion-item,
+.carousel-item {
+  background: transparent;
+  border: none;
+}
+
+.accordion-item + .accordion-item {
+  margin-top: 0.85rem;
+}
+
+.accordion-button {
+  color: var(--text);
+  background: linear-gradient(90deg, rgba(110, 240, 255, 0.12), rgba(255, 79, 216, 0.08));
+  border: 1px solid var(--line);
+  border-radius: 1rem !important;
+  box-shadow: none !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #07121e;
+  background: linear-gradient(90deg, var(--cyan), #b2fff3);
+}
+
+.accordion-button::after {
+  filter: invert(1);
+}
+
+.accordion-button:not(.collapsed)::after {
+  filter: invert(0);
+}
+
+.accordion-body {
+  margin-top: 0.5rem;
+  border: 1px solid rgba(110, 240, 255, 0.14);
+  border-radius: 1.1rem;
+  background: var(--panel-strong);
+  color: var(--text);
+}
+
+.hall-of-fame-year {
+  padding: 1.4rem 3.6rem;
+}
+
+.hall-of-fame-images {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.1rem;
+}
+
+.hall-of-fame-images img {
+  width: 100%;
+  max-width: 680px;
+  border-radius: 1rem;
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 3.5rem;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background-color: rgba(6, 10, 24, 0.75);
+}
+
+@media (max-width: 991px) {
+  .nav-shell {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-cluster {
+    justify-content: flex-start;
+  }
+
+  .hall-of-fame-year {
+    padding: 1.2rem 2.6rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .site-header {
+    padding-top: 0.85rem;
+  }
+
+  .hero-copy,
+  .content-panel,
+  .card-body,
+  .hero-side {
+    padding: 1.2rem;
+  }
+
+  #projtitle {
+    font-size: 1.95rem;
+  }
+
+  .hall-of-fame-year {
+    padding: 1rem 0.75rem 1rem 2rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

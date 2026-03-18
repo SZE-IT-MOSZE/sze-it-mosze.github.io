@@ -1,0 +1,21 @@
+---
+interface Props {
+  items: string[];
+}
+
+const { items } = Astro.props;
+---
+
+<aside class="card course-card">
+  <div class="card-body">
+    <div class="panel-kicker">Course Data</div>
+    <h3 class="panel-title">System Brief</h3>
+    <ul class="mb-0">
+      {
+        items.map((item) => (
+          <li>{item}</li>
+        ))
+      }
+    </ul>
+  </div>
+</aside>
