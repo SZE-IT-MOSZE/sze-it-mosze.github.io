@@ -16,7 +16,9 @@ const hallOfFame = defineCollection({
     projects: z.array(
       z.object({
         id: z.string(),
-        title: z.string(),
+        title: z.string().optional(),
+        group: z.string().optional(),
+        groupName: z.string().optional(),
         intro: z.string().optional(),
         description: z.string().optional(),
         extraParagraphs: z.array(z.string()).optional(),

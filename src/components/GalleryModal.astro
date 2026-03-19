@@ -1,10 +1,18 @@
 ---
+type Detail =
+  | string
+  | {
+      href?: string;
+      label?: string;
+      text: string;
+    };
+
 interface Props {
   id: string;
   title: string;
   subtitle?: string;
   description?: string;
-  details?: string[];
+  details?: Detail[];
   images?: string[];
   triggerLabel?: string;
   triggerClass?: string;
@@ -48,7 +56,27 @@ const {
           {
             details.length ? (
               <ul>
-                {details.map((detail) => <li>{detail}</li>)}
+                {
+                  details.map((detail) => (
+                    <li>
+                      {typeof detail === "string" ? (
+                        detail
+                      ) : detail.href ? (
+                        <>
+                          {detail.label ? <strong>{detail.label}: </strong> : null}
+                          <a href={detail.href} target="_blank" rel="noreferrer">
+                            {detail.text}
+                          </a>
+                        </>
+                      ) : (
+                        <>
+                          {detail.label ? <strong>{detail.label}: </strong> : null}
+                          {detail.text}
+                        </>
+                      )}
+                    </li>
+                  ))
+                }
               </ul>
             ) : null
           }

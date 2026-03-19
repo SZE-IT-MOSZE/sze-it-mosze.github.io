@@ -1,16 +1,76 @@
 ---
 import { getCollection } from "astro:content";
+import { readdirSync } from "node:fs";
+import { extname } from "node:path";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import EducationAccordion from "../components/EducationAccordion.astro";
 import HallOfFame from "../components/HallOfFame.astro";
 import InfoCard from "../components/InfoCard.astro";
 import { educationSections, infoItems } from "../data/site";
 
+const hallOfFameRoot = new URL("../../public/halloffame/", import.meta.url);
+const imageExtensions = new Set([".avif", ".gif", ".jpeg", ".jpg", ".png", ".webp"]);
+const getGroupName = (project: { groupName?: string; group?: string; title?: string }) =>
+  project.groupName ?? project.group ?? project.title ?? "";
+
+const normalizeGroupKey = (value: string) =>
+  value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "");
+
+const hallOfFameFolderCache = new Map<string, Map<string, string>>();
+
+const getYearFolders = (year: string) => {
+  const cachedFolders = hallOfFameFolderCache.get(year);
+  if (cachedFolders) return cachedFolders;
+
+  const folderMap = new Map<string, string>();
+
+  try {
+    const yearDirectory = new URL(`${year}/`, hallOfFameRoot);
+    const entries = readdirSync(yearDirectory, { withFileTypes: true });
+
+    entries
+      .filter((entry) => entry.isDirectory())
+      .forEach((entry) => {
+        folderMap.set(normalizeGroupKey(entry.name), entry.name);
+      });
+  } catch {
+    // Skip years that do not have image folders yet.
+  }
+
+  hallOfFameFolderCache.set(year, folderMap);
+  return folderMap;
+};
+
+const getProjectImages = (year: string, title: string) => {
+  const matchingFolder = getYearFolders(year).get(normalizeGroupKey(title));
+  if (!matchingFolder) return [];
+
+  try {
+    const projectDirectory = new URL(`${year}/${matchingFolder}/`, hallOfFameRoot);
+    return readdirSync(projectDirectory, { withFileTypes: true })
+      .filter((entry) => entry.isFile() && imageExtensions.has(extname(entry.name).toLowerCase()))
+      .map((entry) => `/halloffame/${year}/${matchingFolder}/${entry.name}`)
+      .sort((left, right) => left.localeCompare(right));
+  } catch {
+    return [];
+  }
+};
+
 const hallOfFameYears = (await getCollection("hall-of-fame"))
   .map((entry) => ({
     year: String(entry.data.year),
     id: `best${entry.data.year}`,
-    projects: entry.data.projects,
+    projects: entry.data.projects.map((project) => ({
+      ...project,
+      images: project.images?.length
+        ? project.images
+        : getProjectImages(String(entry.data.year), getGroupName(project)),
+    })),
   }))
   .sort((left, right) => Number(right.year) - Number(left.year));
 
@@ -56,7 +116,7 @@ const featuredProjects = hallOfFameYears
               data-featured-showcase
               data-featured-projects={JSON.stringify(
                 featuredProjects.map((project) => ({
-                  title: project.title,
+                  title: project.title ?? getGroupName(project),
                   year: project.year,
                   image: project.images?.[0],
                   targetId: project.targetId,
@@ -73,13 +133,13 @@ const featuredProjects = hallOfFameYears
               </button>
               <img
                 src={featuredProjects[0].images?.[0]}
-                alt={`${featuredProjects[0].title} featured screenshot`}
+                alt={`${featuredProjects[0].title ?? getGroupName(featuredProjects[0])} featured screenshot`}
                 loading="lazy"
                 data-featured-image
               />
               <div class="featured-showcase-copy">
                 <div class="panel-kicker">Featured Showcase</div>
-                <strong data-featured-title>{featuredProjects[0].title}</strong>
+                <strong data-featured-title>{featuredProjects[0].title ?? getGroupName(featuredProjects[0])}</strong>
                 <span data-featured-year>{featuredProjects[0].year}</span>
               </div>
               <button

@@ -12,7 +12,9 @@ type Bullet =
 
 interface Project {
   id: string;
-  title: string;
+  title?: string;
+  group?: string;
+  groupName?: string;
   intro?: string;
   description?: string;
   extraParagraphs?: string[];
@@ -28,7 +30,55 @@ interface HallYear {
 }
 
 const { years } = Astro.props as { years: HallYear[] };
+const filterTags = Array.from(
+  new Set(
+    years.flatMap((year) => year.projects.flatMap((project) => project.implementationTags ?? [])),
+  ),
+).sort((left, right) => left.localeCompare(right));
+
+const getProjectGroup = (project: Project) => {
+  if (project.groupName) return project.groupName;
+  if (project.group) return project.group;
+  if (project.title) return project.title;
+
+  const groupBullet = project.bullets.find(
+    (bullet) => typeof bullet === "string" && bullet.trim().toLowerCase().startsWith("csapat:"),
+  );
+  return typeof groupBullet === "string"
+    ? groupBullet.replace(/^csapat:\s*/i, "").trim()
+    : undefined;
+};
+
+const getDisplayBullets = (project: Project) =>
+  project.bullets.filter(
+    (bullet) => !(typeof bullet === "string" && bullet.trim().toLowerCase().startsWith("csapat:")),
+  );
+
+const getProjectHeading = (project: Project) => project.title ?? getProjectGroup(project) ?? "Hall of fame project";
 ---
+
+<div class="hall-of-fame-filter">
+  <div class="panel-kicker">Filter by tags</div>
+  <div class="hall-of-fame-filter-bar" aria-hidden="true"></div>
+  {
+    filterTags.length ? (
+      <div class="hall-of-fame-filter-tags" aria-label="Project tag filters">
+        {
+          filterTags.map((tag) => (
+            <button
+              class="hall-of-fame-filter-tag"
+              type="button"
+              data-hall-filter-tag={tag}
+              aria-pressed="false"
+            >
+              {tag}
+            </button>
+          ))
+        }
+      </div>
+    ) : null
+  }
+</div>
 
 <div id="halloffame" class="carousel slide">
   <div class="carousel-inner">
@@ -43,7 +93,16 @@ const { years } = Astro.props as { years: HallYear[] };
             <div class="accordion" id={year.id}>
               {
                 year.projects.map((project) => (
-                  <div class="accordion-item">
+                  (() => {
+                    const group = getProjectGroup(project);
+                    const projectHeading = getProjectHeading(project);
+                    const displayBullets = getDisplayBullets(project);
+                    return (
+                  <div
+                    class="accordion-item"
+                    data-hall-project
+                    data-tags={(project.implementationTags ?? []).join("|")}
+                  >
                     <h5 class="accordion-header">
                       <div class="accordion-header-row">
                         <button
@@ -51,7 +110,10 @@ const { years } = Astro.props as { years: HallYear[] };
                           type="button"
                           data-gallery-modal-open={`${project.id}-modal`}
                         >
-                          {project.title}
+                          <span class="accordion-title-copy">
+                            <span>{projectHeading}</span>
+                            {group ? <span class="accordion-group-name">{group}</span> : null}
+                          </span>
                         </button>
                         <button
                           class="accordion-toggle-button collapsed"
@@ -61,7 +123,7 @@ const { years } = Astro.props as { years: HallYear[] };
                           aria-expanded="false"
                           aria-controls={project.id}
                         >
-                          <span class="visually-hidden">Toggle details for {project.title}</span>
+                          <span class="visually-hidden">Toggle details for {projectHeading}</span>
                         </button>
                       </div>
                     </h5>
@@ -75,35 +137,25 @@ const { years } = Astro.props as { years: HallYear[] };
                         <div class="project-actions">
                           <GalleryModal
                             id={`${project.id}-modal`}
-                            title={project.title}
+                            title={projectHeading}
                             subtitle={year.year}
                             description={project.description ?? project.intro ?? "Hall of fame project"}
                             details={[
+                              ...(group ? [`Csapat: ${group}`] : []),
                               ...(project.implementationTags?.map((tag) => `Technologia: ${tag}`) ?? []),
-                              ...project.bullets
-                                .map((bullet) =>
-                                  typeof bullet === "string"
-                                    ? bullet
-                                    : bullet.href
-                                      ? `Link: ${bullet.text}`
-                                      : `${bullet.label ? `${bullet.label}: ` : ""}${bullet.text}`,
-                                )
-                                .slice(0, 6),
+                              ...displayBullets.slice(0, 6),
                             ]}
                             images={project.images ?? []}
                             triggerLabel="Projekt popup"
                             triggerClass="project-modal-trigger"
                           />
                         </div>
-                        {
-                          project.implementationTags?.length ? (
-                            <div class="implementation-tags" aria-label="Implementation tags">
-                              {project.implementationTags.map((tag) => (
-                                <span class="implementation-tag">{tag}</span>
-                              ))}
-                            </div>
-                          ) : null
-                        }
+                        <div class="implementation-tags" aria-label="Project metadata tags">
+                          {group ? <span class="implementation-tag group-tag">{group}</span> : null}
+                          {project.implementationTags?.map((tag) => (
+                            <span class="implementation-tag">{tag}</span>
+                          ))}
+                        </div>
                         {project.intro ? <p><strong>{project.intro}</strong></p> : null}
                         {project.description ? <p>{project.description}</p> : null}
                         {
@@ -113,7 +165,7 @@ const { years } = Astro.props as { years: HallYear[] };
                         }
                         <ul>
                           {
-                            project.bullets.map((bullet) => (
+                            displayBullets.map((bullet) => (
                               <li>
                                 {typeof bullet === "string" ? (
                                   bullet
@@ -135,7 +187,7 @@ const { years } = Astro.props as { years: HallYear[] };
                           project.images?.length ? (
                             <ProjectGallery
                               id={`${project.id}-gallery`}
-                              title={project.title}
+                              title={projectHeading}
                               images={project.images}
                             />
                           ) : null
@@ -143,6 +195,8 @@ const { years } = Astro.props as { years: HallYear[] };
                       </div>
                     </div>
                   </div>
+                    );
+                  })()
                 ))
               }
             </div>
@@ -170,3 +224,50 @@ const { years } = Astro.props as { years: HallYear[] };
     <span class="visually-hidden">Next</span>
   </button>
 </div>
+
+<script is:inline>
+  (() => {
+    const filterButtons = Array.from(document.querySelectorAll("[data-hall-filter-tag]"));
+    const projectItems = Array.from(document.querySelectorAll("[data-hall-project]"));
+    if (!filterButtons.length || !projectItems.length) return;
+    if (window.__hallOfFameFilterReady) return;
+    window.__hallOfFameFilterReady = true;
+
+    const selectedTags = new Set();
+
+    const render = () => {
+      filterButtons.forEach((button) => {
+        const tag = button.getAttribute("data-hall-filter-tag") ?? "";
+        const isActive = selectedTags.has(tag);
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+
+      projectItems.forEach((item) => {
+        const tags = (item.getAttribute("data-tags") ?? "")
+          .split("|")
+          .filter(Boolean);
+        const matches =
+          selectedTags.size === 0 || tags.some((tag) => selectedTags.has(tag));
+        item.toggleAttribute("hidden", !matches);
+      });
+    };
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const tag = button.getAttribute("data-hall-filter-tag");
+        if (!tag) return;
+
+        if (selectedTags.has(tag)) {
+          selectedTags.delete(tag);
+        } else {
+          selectedTags.add(tag);
+        }
+
+        render();
+      });
+    });
+
+    render();
+  })();
+</script>
