@@ -558,6 +558,74 @@ a:hover {
   padding-left: 1.1rem;
 }
 
+.formatted-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.formatted-copy-intro {
+  margin-bottom: 1.15rem;
+}
+
+.formatted-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.formatted-copy-heading {
+  margin: 0;
+  color: var(--text);
+  font-family: "Orbitron", sans-serif;
+  letter-spacing: 0.05em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.formatted-copy h2.formatted-copy-heading {
+  font-size: 1.1rem;
+}
+
+.formatted-copy h3.formatted-copy-heading,
+.formatted-copy h4.formatted-copy-heading,
+.formatted-copy h5.formatted-copy-heading,
+.formatted-copy h6.formatted-copy-heading {
+  font-size: 0.96rem;
+}
+
+.formatted-copy-intro p {
+  color: var(--text);
+}
+
+.formatted-copy-intro .formatted-copy-heading {
+  color: var(--cyan);
+}
+
+.formatted-copy-compact {
+  display: block;
+  margin: 0;
+}
+
+.formatted-copy-compact p {
+  display: inline;
+}
+
+.formatted-copy-compact .formatted-copy-list {
+  margin-top: 0.6rem;
+}
+
+.formatted-copy-list {
+  margin: 0;
+  padding-left: 1.35rem;
+}
+
+.formatted-copy-list li {
+  margin-bottom: 0.45rem;
+}
+
 .course-card li,
 .accordion-body li {
   margin-bottom: 0.65rem;

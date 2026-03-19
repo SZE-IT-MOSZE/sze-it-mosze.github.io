@@ -29,6 +29,21 @@ interface HallYear {
   projects: Project[];
 }
 
+type TextBlock =
+  | {
+      type: "paragraph";
+      text: string;
+    }
+  | {
+      type: "heading";
+      level: 2 | 3 | 4 | 5 | 6;
+      text: string;
+    }
+  | {
+      type: "list";
+      items: string[];
+    };
+
 const { years } = Astro.props as { years: HallYear[] };
 const filterTags = Array.from(
   new Set(
@@ -55,6 +70,92 @@ const getDisplayBullets = (project: Project) =>
   );
 
 const getProjectHeading = (project: Project) => project.title ?? getProjectGroup(project) ?? "Hall of fame project";
+
+const bulletLinePattern = /^(?:[-*•◦▪‣]|(?:\d+\.))\s+/;
+const markdownHeadingPattern = /^(#{1,6})\s+(.+)$/;
+
+const escapeHtml = (text: string) =>
+  text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+const formatInlineMarkdown = (text: string) => {
+  const escaped = escapeHtml(text);
+
+  return escaped
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/__(.+?)__/g, "<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(/_(.+?)_/g, "<em>$1</em>");
+};
+
+const parseTextBlocks = (text?: string): TextBlock[] => {
+  if (!text) return [];
+
+  const normalizedText = text
+    .replace(/\r\n?/g, "\n")
+    // YAML folded blocks often collapse markdown list items onto one line.
+    .replace(/([:;.!?])\s*(?=(?:[*-]|\d+\.)\s)/g, "$1\n")
+    .replace(/\s+(?=(?:[*-]|\d+\.)\s)/g, "\n")
+    .trim()
+;
+
+  const sections = normalizedText
+    .split(/\n\s*\n/)
+    .map((section) => section.trim())
+    .filter(Boolean);
+
+  return sections.flatMap((section) => {
+    const lines = section
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    const blocks: TextBlock[] = [];
+    let listItems: string[] = [];
+
+    const flushListItems = () => {
+      if (!listItems.length) return;
+      blocks.push({
+        type: "list",
+        items: listItems,
+      });
+      listItems = [];
+    };
+
+    for (const line of lines) {
+      if (bulletLinePattern.test(line)) {
+        listItems.push(line.replace(bulletLinePattern, "").trim());
+        continue;
+      }
+
+      flushListItems();
+
+      const headingMatch = line.match(markdownHeadingPattern);
+      if (headingMatch) {
+        blocks.push({
+          type: "heading" as const,
+          level: Math.min(Math.max(headingMatch[1].length + 1, 2), 6) as 2 | 3 | 4 | 5 | 6,
+          text: headingMatch[2].trim(),
+        });
+        continue;
+      }
+
+      blocks.push({
+        type: "paragraph" as const,
+        text: line,
+      });
+    }
+
+    flushListItems();
+
+    return blocks;
+  });
+};
+
 ---
 
 <div class="hall-of-fame-filter">
@@ -156,13 +257,89 @@ const getProjectHeading = (project: Project) => project.title ?? getProjectGroup
                             <span class="implementation-tag">{tag}</span>
                           ))}
                         </div>
-                        {project.intro ? <p><strong>{project.intro}</strong></p> : null}
-                        {project.description ? <p>{project.description}</p> : null}
-                        {
-                          project.extraParagraphs?.map((paragraph) => (
-                            <p>{paragraph}</p>
-                          ))
-                        }
+                        {project.intro ? (
+                          <div class="formatted-copy formatted-copy-intro">
+                            {parseTextBlocks(project.intro).map((block) =>
+                              block.type === "list" ? (
+                                <ul class="formatted-copy-list">
+                                  {block.items.map((item) => (
+                                    <li set:html={formatInlineMarkdown(item)} />
+                                  ))}
+                                </ul>
+                              ) : block.type === "heading" ? (
+                                block.level === 2 ? (
+                                  <h2 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                ) : block.level === 3 ? (
+                                  <h3 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                ) : block.level === 4 ? (
+                                  <h4 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                ) : block.level === 5 ? (
+                                  <h5 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                ) : (
+                                  <h6 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                )
+                              ) : (
+                                <p set:html={formatInlineMarkdown(block.text)} />
+                              ),
+                            )}
+                          </div>
+                        ) : null}
+                        {project.description ? (
+                          <div class="formatted-copy">
+                            {parseTextBlocks(project.description).map((block) =>
+                              block.type === "list" ? (
+                                <ul class="formatted-copy-list">
+                                  {block.items.map((item) => (
+                                    <li set:html={formatInlineMarkdown(item)} />
+                                  ))}
+                                </ul>
+                              ) : block.type === "heading" ? (
+                                block.level === 2 ? (
+                                  <h2 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                ) : block.level === 3 ? (
+                                  <h3 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                ) : block.level === 4 ? (
+                                  <h4 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                ) : block.level === 5 ? (
+                                  <h5 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                ) : (
+                                  <h6 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                )
+                              ) : (
+                                <p set:html={formatInlineMarkdown(block.text)} />
+                              ),
+                            )}
+                          </div>
+                        ) : null}
+                        {project.extraParagraphs?.length ? (
+                          <div class="formatted-copy">
+                            {project.extraParagraphs.map((paragraph) =>
+                              parseTextBlocks(paragraph).map((block) =>
+                                block.type === "list" ? (
+                                  <ul class="formatted-copy-list">
+                                    {block.items.map((item) => (
+                                      <li set:html={formatInlineMarkdown(item)} />
+                                    ))}
+                                  </ul>
+                                ) : block.type === "heading" ? (
+                                  block.level === 2 ? (
+                                    <h2 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                  ) : block.level === 3 ? (
+                                    <h3 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                  ) : block.level === 4 ? (
+                                    <h4 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                  ) : block.level === 5 ? (
+                                    <h5 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                  ) : (
+                                    <h6 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                  )
+                                ) : (
+                                  <p set:html={formatInlineMarkdown(block.text)} />
+                                ),
+                              ),
+                            )}
+                          </div>
+                        ) : null}
                         <ul>
                           {
                             displayBullets.map((bullet) => (
@@ -174,10 +351,32 @@ const getProjectHeading = (project: Project) => project.title ?? getProjectGroup
                                     {bullet.text}
                                   </a>
                                 ) : (
-                                  <>
+                                  <div class="formatted-copy formatted-copy-compact">
                                     {bullet.label ? <strong>{bullet.label}: </strong> : null}
-                                    {bullet.text}
-                                  </>
+                                    {parseTextBlocks(bullet.text).map((block) =>
+                                      block.type === "list" ? (
+                                        <ul class="formatted-copy-list">
+                                          {block.items.map((item) => (
+                                            <li set:html={formatInlineMarkdown(item)} />
+                                          ))}
+                                        </ul>
+                                      ) : block.type === "heading" ? (
+                                        block.level === 2 ? (
+                                          <h2 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                        ) : block.level === 3 ? (
+                                          <h3 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                        ) : block.level === 4 ? (
+                                          <h4 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                        ) : block.level === 5 ? (
+                                          <h5 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                        ) : (
+                                          <h6 class="formatted-copy-heading" set:html={formatInlineMarkdown(block.text)} />
+                                        )
+                                      ) : (
+                                        <p set:html={formatInlineMarkdown(block.text)} />
+                                      ),
+                                    )}
+                                  </div>
                                 )}
                               </li>
                             ))
