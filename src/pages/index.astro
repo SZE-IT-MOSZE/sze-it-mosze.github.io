@@ -13,6 +13,17 @@ const hallOfFameYears = (await getCollection("hall-of-fame"))
     projects: entry.data.projects,
   }))
   .sort((left, right) => Number(right.year) - Number(left.year));
+
+const featuredProjects = hallOfFameYears
+  .flatMap((year, yearIndex) =>
+    year.projects.map((project) => ({
+      ...project,
+      year: year.year,
+      yearIndex,
+      targetId: project.id,
+    })),
+  )
+  .filter((project) => project.images?.length);
 ---
 
 <BaseLayout title="Modern Szoftverfejlesztesi Eszkozok">
@@ -36,6 +47,52 @@ const hallOfFameYears = (await getCollection("hall-of-fame"))
           teszteles, CI/CD folyamatok GitHub Actions alapon, virtualizalas,
           monitorozas, promptolasi technikak, agens alapu technikak.
         </p>
+        {
+          featuredProjects.length ? (
+            <a
+              class="featured-showcase"
+              href={`#${featuredProjects[0].targetId}`}
+              data-featured-showcase
+              data-featured-projects={JSON.stringify(
+                featuredProjects.map((project) => ({
+                  title: project.title,
+                  year: project.year,
+                  image: project.images?.[0],
+                  targetId: project.targetId,
+                  yearIndex: project.yearIndex,
+                })),
+              )}
+            >
+              <button
+                class="featured-showcase-nav prev"
+                type="button"
+                data-featured-prev
+                aria-label="Previous showcased project"
+              >
+                ‹
+              </button>
+              <img
+                src={featuredProjects[0].images?.[0]}
+                alt={`${featuredProjects[0].title} featured screenshot`}
+                loading="lazy"
+                data-featured-image
+              />
+              <div class="featured-showcase-copy">
+                <div class="panel-kicker">Featured Showcase</div>
+                <strong data-featured-title>{featuredProjects[0].title}</strong>
+                <span data-featured-year>{featuredProjects[0].year}</span>
+              </div>
+              <button
+                class="featured-showcase-nav next"
+                type="button"
+                data-featured-next
+                aria-label="Next showcased project"
+              >
+                ›
+              </button>
+            </a>
+          ) : null
+        }
         <div class="hero-actions">
           <a class="cta-primary" href="#eduinf">Tanulmanyi modulok</a>
           <a class="cta-secondary" href="#hhalloffame">Project archive</a>
@@ -79,3 +136,87 @@ const hallOfFameYears = (await getCollection("hall-of-fame"))
     </section>
   </main>
 </BaseLayout>
+
+<script is:inline>
+  (() => {
+    const showcase = document.querySelector("[data-featured-showcase]");
+    if (!showcase || showcase.dataset.featuredReady === "true") return;
+    showcase.dataset.featuredReady = "true";
+
+    const items = JSON.parse(showcase.getAttribute("data-featured-projects") || "[]");
+    const image = showcase.querySelector("[data-featured-image]");
+    const title = showcase.querySelector("[data-featured-title]");
+    const year = showcase.querySelector("[data-featured-year]");
+    const prev = showcase.querySelector("[data-featured-prev]");
+    const next = showcase.querySelector("[data-featured-next]");
+    let index = 0;
+
+    const render = () => {
+      const item = items[index];
+      if (!item) return;
+      showcase.setAttribute("href", `#${item.targetId}`);
+      if (image && item.image) {
+        image.src = item.image;
+        image.alt = `${item.title} featured screenshot`;
+      }
+      if (title) title.textContent = item.title;
+      if (year) year.textContent = item.year;
+    };
+
+    const step = (direction) => {
+      index = (index + direction + items.length) % items.length;
+      render();
+    };
+
+    prev?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      step(-1);
+    });
+
+    next?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      step(1);
+    });
+
+    render();
+
+    if (items.length > 1) {
+      window.setInterval(() => {
+        step(1);
+      }, 4000);
+    }
+  })();
+
+  (() => {
+    const openHallOfFameTarget = () => {
+      const targetId = window.location.hash.replace(/^#/, "");
+      if (!targetId) return;
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      const yearSlide = target.closest(".carousel-item");
+      const hallCarousel = document.getElementById("halloffame");
+      if (yearSlide && hallCarousel && window.bootstrap?.Carousel) {
+        const slides = Array.from(hallCarousel.querySelectorAll(".carousel-inner > .carousel-item"));
+        const slideIndex = slides.indexOf(yearSlide);
+        if (slideIndex >= 0) {
+          window.bootstrap.Carousel.getOrCreateInstance(hallCarousel).to(slideIndex);
+        }
+      }
+
+      if (target.classList.contains("collapse") && window.bootstrap?.Collapse) {
+        window.bootstrap.Collapse.getOrCreateInstance(target, { toggle: false }).show();
+      }
+
+      window.setTimeout(() => {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 250);
+    };
+
+    window.addEventListener("hashchange", openHallOfFameTarget);
+    window.addEventListener("load", openHallOfFameTarget);
+    window.setTimeout(openHallOfFameTarget, 0);
+  })();
+</script>

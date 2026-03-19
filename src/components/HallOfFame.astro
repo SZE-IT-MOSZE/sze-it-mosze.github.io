@@ -1,4 +1,6 @@
 ---
+import ProjectGallery from "./ProjectGallery.astro";
+
 type Bullet =
   | string
   | {
@@ -96,13 +98,7 @@ const { years } = Astro.props as { years: HallYear[] };
                             ))
                           }
                         </ul>
-                        <div class="hall-of-fame-images">
-                          {
-                            project.images?.map((image) => (
-                              <img src={image} alt={`${project.title} screenshot`} loading="lazy" />
-                            ))
-                          }
-                        </div>
+                        {project.images?.length ? <ProjectGallery id={`${project.id}-gallery`} title={project.title} images={project.images} /> : null}
                       </div>
                     </div>
                   </div>

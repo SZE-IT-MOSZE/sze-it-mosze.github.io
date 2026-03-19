@@ -1,0 +1,88 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  images: string[];
+}
+
+const { id, title, images } = Astro.props as Props;
+---
+
+<div class="project-gallery" data-gallery id={id}>
+  <div class="project-gallery-track" data-gallery-track>
+    {
+      images.map((image, imageIndex) => (
+        <figure class:list={["project-gallery-slide", { active: imageIndex === 0 }]} data-gallery-slide>
+          <img src={image} alt={`${title} screenshot ${imageIndex + 1}`} loading="lazy" />
+        </figure>
+      ))
+    }
+  </div>
+
+  {
+    images.length > 1 ? (
+      <>
+        <button class="project-gallery-nav prev" type="button" data-gallery-prev aria-label="Previous image">
+          ‹
+        </button>
+        <button class="project-gallery-nav next" type="button" data-gallery-next aria-label="Next image">
+          ›
+        </button>
+        <div class="project-gallery-dots" aria-label="Gallery navigation">
+          {
+            images.map((_, imageIndex) => (
+              <button
+                class:list={["project-gallery-dot", { active: imageIndex === 0 }]}
+                type="button"
+                data-gallery-dot={imageIndex}
+                aria-label={`Go to image ${imageIndex + 1}`}
+              ></button>
+            ))
+          }
+        </div>
+      </>
+    ) : null
+  }
+</div>
+
+<script is:inline>
+  (() => {
+    const galleries = document.querySelectorAll("[data-gallery]");
+    galleries.forEach((gallery) => {
+      if (gallery.dataset.galleryReady === "true") return;
+      gallery.dataset.galleryReady = "true";
+
+      const slides = Array.from(gallery.querySelectorAll("[data-gallery-slide]"));
+      const dots = Array.from(gallery.querySelectorAll("[data-gallery-dot]"));
+      const prev = gallery.querySelector("[data-gallery-prev]");
+      const next = gallery.querySelector("[data-gallery-next]");
+      let index = 0;
+
+      const render = () => {
+        slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle("active", slideIndex === index);
+        });
+        dots.forEach((dot, dotIndex) => {
+          dot.classList.toggle("active", dotIndex === index);
+        });
+      };
+
+      prev?.addEventListener("click", () => {
+        index = (index - 1 + slides.length) % slides.length;
+        render();
+      });
+
+      next?.addEventListener("click", () => {
+        index = (index + 1) % slides.length;
+        render();
+      });
+
+      dots.forEach((dot, dotIndex) => {
+        dot.addEventListener("click", () => {
+          index = dotIndex;
+          render();
+        });
+      });
+    });
+  })();
+</script>

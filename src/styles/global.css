@@ -213,6 +213,57 @@ a:hover {
   line-height: 1.7;
 }
 
+.featured-showcase {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto minmax(180px, 260px) 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1.4rem;
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 1.2rem;
+  background: rgba(110, 240, 255, 0.05);
+}
+
+.featured-showcase img {
+  width: 100%;
+  border-radius: 0.9rem;
+  border: 1px solid var(--line-strong);
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  transition: opacity 200ms ease;
+}
+
+.featured-showcase-copy {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.featured-showcase-copy strong {
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.featured-showcase-copy span {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.76rem;
+}
+
+.featured-showcase-nav {
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(6, 10, 24, 0.85);
+  color: var(--text);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -412,12 +463,75 @@ a:hover {
   margin-top: 1.1rem;
 }
 
-.hall-of-fame-images img {
+.hall-of-fame-images img,
+.project-gallery-item img {
   width: 100%;
   max-width: 680px;
   border-radius: 1rem;
   border: 1px solid var(--line-strong);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+.project-gallery {
+  position: relative;
+  margin-top: 1.1rem;
+  max-width: 680px;
+}
+
+.project-gallery-track {
+  position: relative;
+  min-height: 240px;
+}
+
+.project-gallery-slide {
+  display: none;
+  margin: 0;
+}
+
+.project-gallery-slide.active {
+  display: block;
+}
+
+.project-gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(6, 10, 24, 0.85);
+  color: var(--text);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.project-gallery-nav.prev {
+  left: 0.5rem;
+}
+
+.project-gallery-nav.next {
+  right: 0.5rem;
+}
+
+.project-gallery-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.project-gallery-dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.project-gallery-dot.active {
+  background: var(--cyan);
 }
 
 .carousel-control-prev,
@@ -472,5 +586,9 @@ a:hover {
   .hero-actions {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .featured-showcase {
+    grid-template-columns: 1fr;
   }
 }
