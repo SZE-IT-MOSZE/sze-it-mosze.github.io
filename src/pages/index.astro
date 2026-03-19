@@ -34,6 +34,7 @@ const featuredProjects = hallOfFameYears
         <a class="nav-link" href="#generalinf">Altalanos</a>
         <a class="nav-link" href="#eduinf">Oktatasi informaciok</a>
         <a class="nav-link" href="#hhalloffame">Dicsosegcsarnok</a>
+        <a class="nav-link" href="/mosz-emese">Mosz Emese</a>
       </div>
     </nav>
 
@@ -59,7 +60,6 @@ const featuredProjects = hallOfFameYears
                   year: project.year,
                   image: project.images?.[0],
                   targetId: project.targetId,
-                  yearIndex: project.yearIndex,
                 })),
               )}
             >
@@ -69,7 +69,7 @@ const featuredProjects = hallOfFameYears
                 data-featured-prev
                 aria-label="Previous showcased project"
               >
-                ‹
+                &lsaquo;
               </button>
               <img
                 src={featuredProjects[0].images?.[0]}
@@ -88,7 +88,7 @@ const featuredProjects = hallOfFameYears
                 data-featured-next
                 aria-label="Next showcased project"
               >
-                ›
+                &rsaquo;
               </button>
             </a>
           ) : null

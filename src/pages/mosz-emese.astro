@@ -1,0 +1,117 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import GalleryModal from "../components/GalleryModal.astro";
+
+const mascotImages = Array.from({ length: 14 }, (_, index) => ({
+  src: `/mosz_emese/mosze-mascot-${String(index + 1).padStart(2, "0")}.png`,
+  alt: `Mosz Emese concept art ${index + 1}`,
+}));
+---
+
+<BaseLayout title="Mosz Emese">
+  <header class="site-header">
+    <nav class="container nav-shell">
+      <a class="brand-mark" href="/">MOSZE</a>
+      <div class="nav-cluster">
+        <a class="nav-link" href="/">Fooldal</a>
+        <a class="nav-link" href="/#hhalloffame">Dicsosegcsarnok</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container site-main mascot-page">
+    <section class="content-panel mascot-hero">
+      <div class="mascot-hero-layout">
+        <div>
+          <div class="section-heading">
+            <div class="panel-kicker">Subject Mascot</div>
+            <h1 class="mascot-title">Mosz Emese</h1>
+          </div>
+          <p class="hero-lead">
+            A cute looking djinn woman who performs everyday software technology
+            tasks. Acts like an overworked but highly efficient enthusiastic
+            software developer with some unknown magic or yet uknown tools added.
+          </p>
+          <div class="project-actions">
+            <GalleryModal
+              id="mosz-emese-modal"
+              title="Mosz Emese"
+              subtitle="Subject Mascot"
+              description="A cute looking djinn woman who performs everyday software technology tasks. Acts like an overworked but highly efficient enthusiastic software developer with some unknown magic or yet uknown tools added."
+              details={[
+                "Kabalafigura a tantargyhoz",
+                "Cybernetic es enyhen misztikus hangulat",
+                "Tobb konceptkep a karakterrol",
+              ]}
+              images={mascotImages.map((image) => image.src)}
+              triggerLabel="Galeria es popup"
+              triggerClass="project-modal-trigger"
+              showTrigger={false}
+            />
+          </div>
+        </div>
+        <button
+          class="mascot-portrait mascot-image-trigger"
+          type="button"
+          data-gallery-modal-open="mosz-emese-modal"
+          data-gallery-modal-index="0"
+        >
+          <img src={mascotImages[0].src} alt={mascotImages[0].alt} loading="lazy" />
+        </button>
+      </div>
+
+      <div class="mascot-grid">
+        <article class="mascot-card">
+          <div class="panel-kicker">Karakterprofil</div>
+          <h2>Ki o?</h2>
+          <p>
+            Mosz Emese egy kedves megjelenesu dzsinn no, aki a mindennapi
+            szoftvertechnologiai feladatokat intezi. A kabala egyszerre jatekos,
+            szeretheto es technologia-kozpontu.
+          </p>
+        </article>
+
+        <article class="mascot-card">
+          <div class="panel-kicker">Szerep</div>
+          <h2>Miben segit?</h2>
+          <p>
+            Ugy viselkedik, mint egy tulhajszolt, de elkepesztoen hatekony es
+            lelkes fejleszto, aki a tantargy technikai vilagat emberkozeli,
+            emlekezetes karakterre forditja le.
+          </p>
+        </article>
+
+        <article class="mascot-card">
+          <div class="panel-kicker">Kulonlegesseg</div>
+          <h2>Miben mas?</h2>
+          <p>
+            Mintha valamifele ismeretlen magia vagy meg fel nem fedezett eszkoz
+            is segitene a munkajat. Ez adja a figurahoz a cybernetic, kisse
+            misztikus reteget.
+          </p>
+        </article>
+      </div>
+
+      <section class="mascot-gallery-section">
+        <div class="section-heading">
+          <div class="panel-kicker">Concept Gallery</div>
+          <h2>Mosz Emese variaciok</h2>
+        </div>
+        <div class="mascot-gallery">
+          {
+            mascotImages.map((image, imageIndex) => (
+              <button
+                class="mascot-gallery-item mascot-image-trigger"
+                type="button"
+                data-gallery-modal-open="mosz-emese-modal"
+                data-gallery-modal-index={imageIndex}
+              >
+                <img src={image.src} alt={image.alt} loading="lazy" />
+              </button>
+            ))
+          }
+        </div>
+      </section>
+    </section>
+  </main>
+</BaseLayout>

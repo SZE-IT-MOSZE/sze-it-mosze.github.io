@@ -1,0 +1,251 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  details?: string[];
+  images?: string[];
+  triggerLabel?: string;
+  triggerClass?: string;
+  showTrigger?: boolean;
+}
+
+const {
+  id,
+  title,
+  subtitle,
+  description,
+  details = [],
+  images = [],
+  triggerLabel = "Megnyitas",
+  triggerClass = "modal-trigger-button",
+  showTrigger = true,
+} = Astro.props as Props;
+---
+
+{
+  showTrigger ? (
+    <button class={triggerClass} type="button" data-gallery-modal-open={id}>
+      {triggerLabel}
+    </button>
+  ) : null
+}
+
+<div class="gallery-modal-overlay" data-gallery-modal={id} hidden>
+  <div class="gallery-modal" role="dialog" aria-modal="true" aria-labelledby={`${id}-title`}>
+    <div class="gallery-modal-shell">
+      <button class="gallery-modal-close" type="button" data-gallery-modal-close aria-label="Close">
+        &times;
+      </button>
+
+      <div class="gallery-modal-content">
+        <div class="gallery-modal-copy">
+          <div class="panel-kicker">Popup Showcase</div>
+          <h2 id={`${id}-title`}>{title}</h2>
+          {subtitle ? <div class="gallery-modal-subtitle">{subtitle}</div> : null}
+          {description ? <p>{description}</p> : null}
+          {
+            details.length ? (
+              <ul>
+                {details.map((detail) => <li>{detail}</li>)}
+              </ul>
+            ) : null
+          }
+        </div>
+
+        {
+          images.length ? (
+            <div class="gallery-modal-media" data-gallery id={`${id}-modal-gallery`}>
+              <div class="project-gallery-track" data-gallery-track>
+                {
+                  images.map((image, imageIndex) => (
+                    <figure
+                      class:list={["project-gallery-slide", { active: imageIndex === 0 }]}
+                      data-gallery-slide
+                    >
+                      <img src={image} alt={`${title} screenshot ${imageIndex + 1}`} loading="lazy" />
+                    </figure>
+                  ))
+                }
+              </div>
+              {
+                images.length > 1 ? (
+                  <>
+                    <button
+                      class="project-gallery-nav prev"
+                      type="button"
+                      data-gallery-prev
+                      aria-label="Previous image"
+                    >
+                      &lsaquo;
+                    </button>
+                    <button
+                      class="project-gallery-nav next"
+                      type="button"
+                      data-gallery-next
+                      aria-label="Next image"
+                    >
+                      &rsaquo;
+                    </button>
+                    <div class="project-gallery-dots">
+                      {
+                        images.map((_, imageIndex) => (
+                          <button
+                            class:list={["project-gallery-dot", { active: imageIndex === 0 }]}
+                            type="button"
+                            data-gallery-dot={imageIndex}
+                            aria-label={`Go to image ${imageIndex + 1}`}
+                          ></button>
+                        ))
+                      }
+                    </div>
+                  </>
+                ) : null
+              }
+            </div>
+          ) : null
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const initializeGallery = (root) => {
+      if (!root) return null;
+      const slides = Array.from(root.querySelectorAll("[data-gallery-slide]"));
+      const dots = Array.from(root.querySelectorAll("[data-gallery-dot]"));
+      const prev = root.querySelector("[data-gallery-prev]");
+      const next = root.querySelector("[data-gallery-next]");
+      if (!slides.length) return null;
+
+      if (root.dataset.galleryReady === "true") {
+        return root.__galleryState ?? null;
+      }
+
+      root.dataset.galleryReady = "true";
+      let index = 0;
+
+      const render = () => {
+        slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle("active", slideIndex === index);
+        });
+        dots.forEach((dot, dotIndex) => {
+          dot.classList.toggle("active", dotIndex === index);
+        });
+      };
+
+      prev?.addEventListener("click", () => {
+        index = (index - 1 + slides.length) % slides.length;
+        render();
+      });
+
+      next?.addEventListener("click", () => {
+        index = (index + 1) % slides.length;
+        render();
+      });
+
+      dots.forEach((dot, dotIndex) => {
+        dot.addEventListener("click", () => {
+          index = dotIndex;
+          render();
+        });
+      });
+
+      const state = {
+        get length() {
+          return slides.length;
+        },
+        get index() {
+          return index;
+        },
+        openAt(nextIndex = 0) {
+          index = Number.isFinite(nextIndex)
+            ? Math.max(0, Math.min(nextIndex, slides.length - 1))
+            : 0;
+          render();
+        },
+        step(delta) {
+          if (!slides.length) return;
+          index = (index + delta + slides.length) % slides.length;
+          render();
+        },
+      };
+
+      root.__galleryState = state;
+      render();
+      return state;
+    };
+
+    const closeModal = (overlay) => {
+      if (!overlay) return;
+      overlay.hidden = true;
+      document.body.classList.remove("modal-open");
+    };
+
+    const openModal = (overlay, startIndex = 0) => {
+      if (!overlay) return;
+      const galleryState = initializeGallery(overlay.querySelector("[data-gallery]"));
+      galleryState?.openAt(startIndex);
+      overlay.hidden = false;
+      document.body.classList.add("modal-open");
+    };
+
+    document.querySelectorAll("[data-gallery-modal]").forEach((overlay) => {
+      if (overlay.dataset.movedToBody === "true") return;
+      overlay.dataset.movedToBody = "true";
+      document.body.appendChild(overlay);
+    });
+
+    if (window.__moszeGalleryModalReady) return;
+    window.__moszeGalleryModalReady = true;
+
+    document.addEventListener("click", (event) => {
+      const openTrigger = event.target.closest("[data-gallery-modal-open]");
+      if (openTrigger) {
+        const id = openTrigger.getAttribute("data-gallery-modal-open");
+        const overlay = document.querySelector(`[data-gallery-modal="${id}"]`);
+        if (!overlay) return;
+        const startIndex = Number.parseInt(
+          openTrigger.getAttribute("data-gallery-modal-index") ?? "0",
+          10,
+        );
+        event.preventDefault();
+        event.stopPropagation();
+        openModal(overlay, Number.isNaN(startIndex) ? 0 : startIndex);
+        return;
+      }
+
+      const closeTrigger = event.target.closest("[data-gallery-modal-close]");
+      if (closeTrigger) {
+        closeModal(closeTrigger.closest("[data-gallery-modal]"));
+        return;
+      }
+
+      const overlay = event.target.closest("[data-gallery-modal]");
+      if (overlay && event.target === overlay) {
+        closeModal(overlay);
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      const openOverlay = document.querySelector('.gallery-modal-overlay:not([hidden])');
+      if (!openOverlay) return;
+
+      if (event.key === "Escape") {
+        closeModal(openOverlay);
+        return;
+      }
+
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+
+      const galleryState = initializeGallery(openOverlay.querySelector("[data-gallery]"));
+      if (!galleryState || galleryState.length < 2) return;
+
+      event.preventDefault();
+      galleryState.step(event.key === "ArrowLeft" ? -1 : 1);
+    });
+  })();
+</script>

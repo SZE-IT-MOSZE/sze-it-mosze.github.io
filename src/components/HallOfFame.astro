@@ -1,4 +1,5 @@
 ---
+import GalleryModal from "./GalleryModal.astro";
 import ProjectGallery from "./ProjectGallery.astro";
 
 type Bullet =
@@ -44,16 +45,25 @@ const { years } = Astro.props as { years: HallYear[] };
                 year.projects.map((project) => (
                   <div class="accordion-item">
                     <h5 class="accordion-header">
-                      <button
-                        class="accordion-button collapsed"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target={`#${project.id}`}
-                        aria-expanded="false"
-                        aria-controls={project.id}
-                      >
-                        {project.title}
-                      </button>
+                      <div class="accordion-header-row">
+                        <button
+                          class="accordion-title-button"
+                          type="button"
+                          data-gallery-modal-open={`${project.id}-modal`}
+                        >
+                          {project.title}
+                        </button>
+                        <button
+                          class="accordion-toggle-button collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target={`#${project.id}`}
+                          aria-expanded="false"
+                          aria-controls={project.id}
+                        >
+                          <span class="visually-hidden">Toggle details for {project.title}</span>
+                        </button>
+                      </div>
                     </h5>
                     <div
                       id={project.id}
@@ -62,6 +72,29 @@ const { years } = Astro.props as { years: HallYear[] };
                     >
                       <div class="accordion-body">
                         <div class="panel-kicker">Featured Build</div>
+                        <div class="project-actions">
+                          <GalleryModal
+                            id={`${project.id}-modal`}
+                            title={project.title}
+                            subtitle={year.year}
+                            description={project.description ?? project.intro ?? "Hall of fame project"}
+                            details={[
+                              ...(project.implementationTags?.map((tag) => `Technologia: ${tag}`) ?? []),
+                              ...project.bullets
+                                .map((bullet) =>
+                                  typeof bullet === "string"
+                                    ? bullet
+                                    : bullet.href
+                                      ? `Link: ${bullet.text}`
+                                      : `${bullet.label ? `${bullet.label}: ` : ""}${bullet.text}`,
+                                )
+                                .slice(0, 6),
+                            ]}
+                            images={project.images ?? []}
+                            triggerLabel="Projekt popup"
+                            triggerClass="project-modal-trigger"
+                          />
+                        </div>
                         {
                           project.implementationTags?.length ? (
                             <div class="implementation-tags" aria-label="Implementation tags">
@@ -98,7 +131,15 @@ const { years } = Astro.props as { years: HallYear[] };
                             ))
                           }
                         </ul>
-                        {project.images?.length ? <ProjectGallery id={`${project.id}-gallery`} title={project.title} images={project.images} /> : null}
+                        {
+                          project.images?.length ? (
+                            <ProjectGallery
+                              id={`${project.id}-gallery`}
+                              title={project.title}
+                              images={project.images}
+                            />
+                          ) : null
+                        }
                       </div>
                     </div>
                   </div>
