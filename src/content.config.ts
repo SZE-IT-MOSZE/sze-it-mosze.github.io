@@ -30,6 +30,17 @@ const hallOfFame = defineCollection({
   }),
 });
 
+const lectures = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    order: z.number().optional(),
+    summary: z.string().optional(),
+    date: z.string().optional(),
+  }),
+});
+
 export const collections = {
   "hall-of-fame": hallOfFame,
+  lectures,
 };

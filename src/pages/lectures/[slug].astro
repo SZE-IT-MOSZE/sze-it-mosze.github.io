@@ -1,0 +1,46 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const lectures = await getCollection("lectures");
+
+  return lectures.map((lecture) => ({
+    params: { slug: lecture.slug },
+    props: { lecture },
+  }));
+}
+
+const { lecture } = Astro.props;
+const { Content } = await render(lecture);
+---
+
+<BaseLayout title={lecture.data.title}>
+  <header class="site-header">
+    <nav class="container nav-shell">
+      <a class="brand-mark" href="/">MOSZE</a>
+      <div class="nav-cluster">
+        <a class="nav-link" href="/">Fooldal</a>
+        <a class="nav-link" href="/lectures">Eloadasok</a>
+        <a class="nav-link" href="/#hhalloffame">Dicsosegcsarnok</a>
+        <a class="nav-link" href="/mosz-emese">Mosz Emese</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container site-main lectures-page">
+    <article class="content-panel lecture-card lecture-detail-card">
+      <div class="section-heading">
+        <div class="panel-kicker">{lecture.data.date ?? "Kurzusanyag"}</div>
+        <h1>{lecture.data.title}</h1>
+      </div>
+      {lecture.data.summary ? <p class="lecture-summary">{lecture.data.summary}</p> : null}
+      <div class="lecture-meta-actions">
+        <a class="cta-secondary lecture-back-link" href="/lectures">Vissza az eloadasokhoz</a>
+      </div>
+      <div class="formatted-copy lecture-content">
+        <Content />
+      </div>
+    </article>
+  </main>
+</BaseLayout>

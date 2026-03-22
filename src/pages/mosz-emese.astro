@@ -1,11 +1,18 @@
 ---
+import { readdirSync } from "node:fs";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import GalleryModal from "../components/GalleryModal.astro";
 
-const mascotImages = Array.from({ length: 14 }, (_, index) => ({
-  src: `/mosz_emese/mosze-mascot-${String(index + 1).padStart(2, "0")}.png`,
-  alt: `Mosz Emese concept art ${index + 1}`,
-}));
+const mascotDirectory = new URL("../../public/mosz_emese/", import.meta.url);
+
+const mascotImages = readdirSync(mascotDirectory, { withFileTypes: true })
+  .filter((entry) => entry.isFile() && /^mosze-mascot-\d\d\.png$/i.test(entry.name))
+  .map((entry) => entry.name)
+  .sort((left, right) => left.localeCompare(right, "en"))
+  .map((fileName, index) => ({
+    src: `/mosz_emese/${fileName}`,
+    alt: `Mosz Emese concept art ${index + 1}`,
+  }));
 ---
 
 <BaseLayout title="Mosz Emese">
@@ -14,6 +21,7 @@ const mascotImages = Array.from({ length: 14 }, (_, index) => ({
       <a class="brand-mark" href="/">MOSZE</a>
       <div class="nav-cluster">
         <a class="nav-link" href="/">Fooldal</a>
+        <a class="nav-link" href="/lectures">Eloadasok</a>
         <a class="nav-link" href="/#hhalloffame">Dicsosegcsarnok</a>
       </div>
     </nav>

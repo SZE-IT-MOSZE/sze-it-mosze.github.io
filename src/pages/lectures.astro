@@ -1,0 +1,67 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const lectures = (await getCollection("lectures")).sort((left, right) => {
+  const leftOrder = left.data.order ?? Number.MAX_SAFE_INTEGER;
+  const rightOrder = right.data.order ?? Number.MAX_SAFE_INTEGER;
+
+  if (leftOrder !== rightOrder) return leftOrder - rightOrder;
+  return left.data.title.localeCompare(right.data.title, "hu");
+});
+---
+
+<BaseLayout title="Eloadasok">
+  <header class="site-header">
+    <nav class="container nav-shell">
+      <a class="brand-mark" href="/">MOSZE</a>
+      <div class="nav-cluster">
+        <a class="nav-link" href="/">Fooldal</a>
+        <a class="nav-link" href="/lectures">Eloadasok</a>
+        <a class="nav-link" href="/#hhalloffame">Dicsosegcsarnok</a>
+        <a class="nav-link" href="/mosz-emese">Mosz Emese</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container site-main lectures-page">
+    <section class="content-panel lectures-hero">
+      <div class="section-heading">
+        <div class="panel-kicker">Lecture Archive</div>
+        <h1>Eloadasok</h1>
+      </div>
+      <p class="hero-lead lectures-lead">
+        Minden Markdown fajl kulon aloldalt kap a <code>src/content/lectures</code>
+        mappabol, itt pedig a teljes lista jelenik meg.
+      </p>
+    </section>
+
+    {
+      lectures.length ? (
+        <section class="lectures-grid" aria-label="Lecture list">
+          {lectures.map((lecture) => (
+            <a class="content-panel lecture-card lecture-link-card" href={`/lectures/${lecture.slug}/`}>
+              <div class="section-heading">
+                <div class="panel-kicker">{lecture.data.date ?? "Kurzusanyag"}</div>
+                <h2>{lecture.data.title}</h2>
+              </div>
+              {lecture.data.summary ? <p class="lecture-summary">{lecture.data.summary}</p> : null}
+              <span class="lecture-link-label">Megnyitas</span>
+            </a>
+          ))}
+        </section>
+      ) : (
+        <section class="content-panel lecture-card">
+          <div class="section-heading">
+            <div class="panel-kicker">Lecture Archive</div>
+            <h2>Meg nincs feltoltott eloadas</h2>
+          </div>
+          <p class="lecture-summary">
+            Helyezz el Markdown fajlokat a <code>src/content/lectures</code> mappaban,
+            es azok automatikusan kulon aloldalkent jelennek meg.
+          </p>
+        </section>
+      )
+    }
+  </main>
+</BaseLayout>
