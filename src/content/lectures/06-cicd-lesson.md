@@ -1,6 +1,16 @@
 ---
-title: "Folytonos integráció (CI/CD)"
-description: "Build rendszerektől a CI/CD-ig: alapfogalmak, pipeline-ok, trigger-ek, artifactok, Jenkins, GitHub Actions és Unity-s kitekintés."
+title: "Modern szoftverfejlesztési eszközök 6. – Folytonos integráció (CI/CD)"
+order: 6
+date: "6. hét"
+slug: "mosze-06-cicd"
+summary: "Build rendszerektől a CI/CD-ig: alapfogalmak, pipeline-ok, trigger-ek, artifactok, Jenkins, GitHub Actions és Unity-s kitekintés."
+tags:
+  - ci
+  - cd
+  - pipeline
+  - jenkins
+  - github-actions
+  - unity
 ---
 
 # Folytonos integráció (CI/CD)

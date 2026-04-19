@@ -36,7 +36,10 @@ const lectures = defineCollection({
     title: z.string(),
     order: z.number().optional(),
     summary: z.string().optional(),
+    description: z.string().optional(),
     date: z.string().optional(),
+    slug: z.string().optional(),
+    tags: z.array(z.string()).optional(),
   }),
 });
 

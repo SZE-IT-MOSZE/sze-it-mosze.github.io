@@ -45,7 +45,9 @@ const lectures = (await getCollection("lectures")).sort((left, right) => {
                 <div class="panel-kicker">{lecture.data.date ?? "Kurzusanyag"}</div>
                 <h2>{lecture.data.title}</h2>
               </div>
-              {lecture.data.summary ? <p class="lecture-summary">{lecture.data.summary}</p> : null}
+              {lecture.data.summary || lecture.data.description ? (
+                <p class="lecture-summary">{lecture.data.summary ?? lecture.data.description}</p>
+              ) : null}
               <span class="lecture-link-label">Megnyitas</span>
             </a>
           ))}

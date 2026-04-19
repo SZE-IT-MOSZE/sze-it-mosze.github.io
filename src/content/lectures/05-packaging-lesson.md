@@ -1,5 +1,7 @@
 ---
 title: "Modern szoftverfejlesztési eszközök 5. – Build rendszerek, csomagkezelés és automatizálás"
+order: 5
+date: "5. hét"
 slug: "mosze-05-build-rendszerek"
 summary: "Részletes jegyzet a build folyamat lépéseiről, fordítási alapfogalmakról, Make/Ninja/CMake/Meson eszközökről, valamint C# és Unity build sajátosságokról."
 tags:
