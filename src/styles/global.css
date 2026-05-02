@@ -453,12 +453,32 @@ a:hover {
   padding-top: 1.2rem;
 }
 
+.students-page {
+  padding-top: 1.2rem;
+}
+
 .lectures-hero {
   padding: 2rem;
 }
 
+.students-hero {
+  padding: 2rem;
+}
+
+.students-title {
+  margin: 0;
+  font-family: "Orbitron", sans-serif;
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 .lectures-lead {
   max-width: 48rem;
+}
+
+.students-lead {
+  max-width: 46rem;
 }
 
 .lectures-grid {
@@ -468,6 +488,223 @@ a:hover {
 
 .lecture-card {
   padding: 1.6rem;
+}
+
+.students-table {
+  display: grid;
+  gap: 0;
+  padding: 0;
+}
+
+.students-table-header,
+.student-work-row {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(150px, 0.9fr) minmax(260px, 1.7fr) minmax(110px, 0.55fr) minmax(170px, 0.8fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.students-table-header {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.student-work-year-group {
+  position: relative;
+  z-index: 1;
+  display: grid;
+}
+
+.student-work-year-heading {
+  margin: 0;
+  padding: 1rem 1.2rem 0.85rem;
+  border-bottom: 1px solid rgba(110, 240, 255, 0.18);
+  background: rgba(110, 240, 255, 0.04);
+  color: var(--gold);
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.25rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.student-work-year-group + .student-work-year-group .student-work-year-heading {
+  border-top: 1px solid var(--line);
+}
+
+.student-work-row {
+  padding: 1.2rem;
+}
+
+.student-work-row + .student-work-row {
+  border-top: 1px solid rgba(110, 240, 255, 0.14);
+}
+
+.student-work-main,
+.student-work-details,
+.student-work-platform,
+.student-work-actions,
+.student-work-media {
+  position: relative;
+  z-index: 1;
+}
+
+.student-work-main,
+.student-work-details {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.student-work-details h3 {
+  margin: 0;
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.student-work-platform span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: start;
+  min-width: 3.5rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(110, 240, 255, 0.08);
+  color: var(--cyan);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.student-work-owner,
+.student-work-description {
+  margin: 0;
+}
+
+.student-work-owner {
+  width: fit-content;
+  color: var(--cyan);
+  font-weight: 700;
+}
+
+.student-work-owner:hover {
+  color: var(--teal);
+}
+
+.student-profile-button {
+  width: fit-content;
+}
+
+.student-work-description {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.student-work-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
+.student-work-actions .project-modal-trigger {
+  min-width: 5.8rem;
+}
+
+.student-play-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-width: 6.4rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid rgba(56, 255, 195, 0.8);
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--cyan), var(--teal));
+  color: #041019;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 26px rgba(56, 255, 195, 0.18);
+}
+
+.student-play-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 32px rgba(56, 255, 195, 0.24);
+}
+
+.student-play-button:disabled {
+  cursor: default;
+  opacity: 0.62;
+  transform: none;
+  box-shadow: none;
+}
+
+.student-play-icon {
+  width: 0;
+  height: 0;
+  border-top: 0.36rem solid transparent;
+  border-bottom: 0.36rem solid transparent;
+  border-left: 0.58rem solid #041019;
+}
+
+.student-work-media {
+  grid-column: 2 / -1;
+  display: grid;
+  gap: 0.75rem;
+  max-width: 960px;
+}
+
+.student-itch-embed,
+.student-play-embed {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: rgba(2, 8, 21, 0.82);
+}
+
+.student-itch-embed {
+  max-width: 552px;
+}
+
+.student-play-embed {
+  aspect-ratio: var(--embed-ratio);
+}
+
+.student-itch-embed iframe,
+.student-play-embed iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+}
+
+.student-itch-embed iframe {
+  height: 167px;
+}
+
+.student-play-embed iframe {
+  height: 100%;
+}
+
+.student-work-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
 }
 
 .lecture-link-card {
@@ -574,6 +811,35 @@ a:hover {
   position: relative;
   z-index: 1;
   margin-bottom: 1rem;
+}
+
+.hall-of-fame-year-header {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.hall-of-fame-carousel-button {
+  top: 1.35rem;
+  bottom: auto;
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 0;
+  opacity: 1;
+}
+
+.hall-of-fame-carousel-button-left {
+  left: 0.8rem;
+}
+
+.hall-of-fame-carousel-button-right {
+  right: 0.8rem;
+}
+
+.hall-of-fame-carousel-button:hover {
+  opacity: 1;
 }
 
 .section-heading h2,
@@ -1159,6 +1425,20 @@ a:hover {
   .gallery-modal-content {
     grid-template-columns: 1fr;
   }
+
+  .students-table-header,
+  .student-work-row {
+    grid-template-columns: minmax(130px, 0.8fr) minmax(220px, 1.4fr) minmax(140px, 0.8fr);
+  }
+
+  .students-table-header span:nth-child(3),
+  .student-work-platform {
+    display: none;
+  }
+
+  .student-work-media {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (max-width: 767px) {
@@ -1188,5 +1468,38 @@ a:hover {
 
   .featured-showcase {
     grid-template-columns: 1fr;
+  }
+
+  .students-table {
+    padding: 0;
+  }
+
+  .students-table-header {
+    display: none;
+  }
+
+  .student-work-row {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    padding: 1rem;
+  }
+
+  .student-work-main,
+  .student-work-details,
+  .student-work-actions,
+  .student-work-media {
+    grid-column: 1;
+  }
+
+  .student-work-actions {
+    justify-content: flex-start;
+  }
+
+  .student-work-actions .project-modal-trigger {
+    flex: 1 1 8rem;
+  }
+
+  .student-itch-embed {
+    max-width: none;
   }
 }

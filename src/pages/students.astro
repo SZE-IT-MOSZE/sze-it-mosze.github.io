@@ -1,0 +1,157 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { studentWorks } from "../data/studentWorks";
+
+const studentWorkGroups = Array.from(
+  studentWorks.reduce((groups, work) => {
+    const year = work.year ?? "Egyeb";
+    groups.set(year, [...(groups.get(year) ?? []), work]);
+    return groups;
+  }, new Map<string, typeof studentWorks>()),
+).sort(([leftYear], [rightYear]) => Number(rightYear) - Number(leftYear));
+---
+
+<BaseLayout title="Student Work">
+  <header class="site-header">
+    <nav class="container nav-shell">
+      <a class="brand-mark" href="/">MOSZE</a>
+      <div class="nav-cluster">
+        <a class="nav-link" href="/">Fooldal</a>
+        <a class="nav-link" href="/lectures">Eloadasok</a>
+        <a class="nav-link" href="/#hhalloffame">Dicsosegcsarnok</a>
+        <a class="nav-link" href="/mosz-emese">Mosz Emese</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container site-main students-page">
+    <section class="content-panel students-hero">
+      <div class="section-heading">
+        <div class="panel-kicker">Student Showcase</div>
+        <h1 class="students-title">Hallgatoi munkak</h1>
+      </div>
+      <p class="hero-lead students-lead">
+        Egyeni hallgatoi oldalak, portfoliok es publikalt projektgyujtemenyek
+        osszegyujtve egy helyen.
+      </p>
+    </section>
+
+    <section class="content-panel students-table" aria-label="Student work links">
+      <div class="students-table-header" aria-hidden="true">
+        <span>Hallgato</span>
+        <span>Munka</span>
+        <span>Platform</span>
+        <span>Muveletek</span>
+      </div>
+      {
+        studentWorkGroups.map(([year, works]) => (
+          <section class="student-work-year-group" aria-labelledby={`student-work-year-${year}`}>
+            <h2 id={`student-work-year-${year}`} class="student-work-year-heading">{year}</h2>
+            {works.map((work, workIndex) => (
+              <article class="student-work-row">
+                <div class="student-work-main">
+                  <a class="student-work-owner" href={work.href} target="_blank" rel="noopener noreferrer">
+                    {work.studentName}
+                  </a>
+                  <a class="project-modal-trigger student-profile-button" href={work.href} target="_blank" rel="noopener noreferrer">
+                    Profil
+                  </a>
+                </div>
+
+                <div class="student-work-details">
+                  <h3>{work.title}</h3>
+                  <p class="student-work-description">{work.description}</p>
+                  {work.tags?.length ? (
+                    <div class="student-work-tags" aria-label={`${work.title} tags`}>
+                      {work.tags.map((tag) => (
+                        <span class="implementation-tag">{tag}</span>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+
+                <div class="student-work-platform">
+                  <span>{work.platform}</span>
+                </div>
+
+                <div class="student-work-actions">
+                  {work.playEmbed ? (
+                    <button
+                      class="student-play-button"
+                      type="button"
+                      data-student-embed-button
+                      data-student-embed-target={`student-play-embed-${year}-${workIndex}`}
+                      data-student-embed-title={work.playEmbed.title}
+                      data-student-embed-src={work.playEmbed.src}
+                      data-student-embed-width={work.playEmbed.width}
+                      data-student-embed-height={work.playEmbed.height}
+                      data-student-embed-allow-fullscreen="true"
+                    >
+                      <span class="student-play-icon" aria-hidden="true"></span>
+                      <span>Play</span>
+                    </button>
+                  ) : null}
+                </div>
+
+                <div class="student-work-media">
+                  {work.embed ? (
+                    <div class="student-itch-embed" style={`--embed-ratio: ${work.embed.width} / ${work.embed.height}`}>
+                      <iframe
+                        title={work.embed.title}
+                        src={work.embed.src}
+                        width={work.embed.width}
+                        height={work.embed.height}
+                        loading="lazy"
+                      />
+                    </div>
+                  ) : null}
+                  {work.playEmbed ? (
+                    <div
+                      id={`student-play-embed-${year}-${workIndex}`}
+                      class="student-play-embed"
+                      style={`--embed-ratio: ${work.playEmbed.width} / ${work.playEmbed.height}`}
+                      hidden
+                    />
+                  ) : null}
+                </div>
+              </article>
+            ))}
+          </section>
+        ))
+      }
+    </section>
+  </main>
+</BaseLayout>
+
+<script is:inline>
+  (() => {
+    const buttons = Array.from(document.querySelectorAll("[data-student-embed-button]"));
+    if (!buttons.length) return;
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const targetId = button.getAttribute("data-student-embed-target");
+        const target = targetId ? document.getElementById(targetId) : null;
+        if (!target || target.dataset.loaded === "true") return;
+
+        const iframe = document.createElement("iframe");
+        iframe.title = button.getAttribute("data-student-embed-title") ?? "Student work embed";
+        iframe.src = button.getAttribute("data-student-embed-src") ?? "";
+        iframe.width = button.getAttribute("data-student-embed-width") ?? "960";
+        iframe.height = button.getAttribute("data-student-embed-height") ?? "560";
+        iframe.loading = "lazy";
+        iframe.frameBorder = "0";
+
+        if (button.getAttribute("data-student-embed-allow-fullscreen") === "true") {
+          iframe.allowFullscreen = true;
+        }
+
+        target.appendChild(iframe);
+        target.hidden = false;
+        target.dataset.loaded = "true";
+        button.setAttribute("aria-expanded", "true");
+        button.setAttribute("disabled", "true");
+      });
+    });
+  })();
+</script>

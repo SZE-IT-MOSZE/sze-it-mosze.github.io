@@ -187,10 +187,30 @@ const parseTextBlocks = (text?: string): TextBlock[] => {
       years.map((year, yearIndex) => (
         <section class:list={["carousel-item", { active: yearIndex === 0 }]}>
           <div class="hall-of-fame-year">
-            <div class="year-header">
-              <div class="panel-kicker">Archive Cycle</div>
-              <h5>{year.year}</h5>
+            <div class="year-header hall-of-fame-year-header">
+              <div>
+                <div class="panel-kicker">Archive Cycle</div>
+                <h5>{year.year}</h5>
+              </div>
             </div>
+            <button
+              class="carousel-control-prev hall-of-fame-carousel-button hall-of-fame-carousel-button-left"
+              type="button"
+              data-bs-target="#halloffame"
+              data-bs-slide="next"
+            >
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous year</span>
+            </button>
+            <button
+              class="carousel-control-next hall-of-fame-carousel-button hall-of-fame-carousel-button-right"
+              type="button"
+              data-bs-target="#halloffame"
+              data-bs-slide="prev"
+            >
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next year</span>
+            </button>
             <div class="accordion" id={year.id}>
               {
                 year.projects.map((project) => (
@@ -404,24 +424,6 @@ const parseTextBlocks = (text?: string): TextBlock[] => {
       ))
     }
   </div>
-  <button
-    class="carousel-control-prev"
-    type="button"
-    data-bs-target="#halloffame"
-    data-bs-slide="next"
-  >
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button
-    class="carousel-control-next"
-    type="button"
-    data-bs-target="#halloffame"
-    data-bs-slide="prev"
-  >
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
 </div>
 
 <script is:inline>
