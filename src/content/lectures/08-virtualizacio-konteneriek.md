@@ -172,6 +172,11 @@ A Docker ezt a kernel-szintű képességet csomagolta fejlesztőbarát API-ba.
 - **Service** — konténerek skálázásának absztrakciója.
 - **Registry** — image-ek tárhelye (lokális vagy távoli, pl. Docker Hub, GHCR, ECR).
 
+<figure class="lecture-figure">
+  <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Docker-architecture.png" alt="Docker architecture diagram showing client, host, registry, images and containers" loading="lazy" />
+  <figcaption>Docker architektura attekintese. Forras: Wikimedia Commons / Docker documentation, CC BY-SA 4.0.</figcaption>
+</figure>
+
 ### Fontosabb Docker CLI parancsok
 
 | Parancs | Mit csinál |

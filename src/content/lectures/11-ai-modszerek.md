@@ -106,6 +106,11 @@ Attention(Q, K, V) = softmax(Q · Kᵀ / √dₖ) · V
 | Dekóder-only (1→N) | GPT | Szöveggenerálás |
 | Enkóder-dekóder (N→N) | T5, BART | Fordítás, összefoglalás |
 
+<figure class="lecture-figure lecture-figure-portrait">
+  <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Full_GPT_architecture.svg" alt="Full GPT architecture diagram" loading="lazy" />
+  <figcaption>GPT architektura egy attekinto abran. Forras: Wikimedia Commons, CC0.</figcaption>
+</figure>
+
 ---
 
 ## 3. A 2026-os modellpaletta

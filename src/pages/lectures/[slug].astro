@@ -12,7 +12,8 @@ export async function getStaticPaths() {
 }
 
 const { lecture } = Astro.props;
-const { Content } = await render(lecture);
+const { Content, headings } = await render(lecture);
+const tocHeadings = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
 ---
 
 <BaseLayout title={lecture.data.title}>
@@ -30,6 +31,21 @@ const { Content } = await render(lecture);
   </header>
 
   <main class="container site-main lectures-page">
+    {
+      tocHeadings.length ? (
+        <aside class="floating-toc" aria-label="Lecture table of contents">
+          <div class="floating-toc-title">Fejezetek</div>
+          <nav>
+            {tocHeadings.map((heading) => (
+              <a class={`toc-depth-${heading.depth}`} href={`#${heading.slug}`}>
+                {heading.text}
+              </a>
+            ))}
+          </nav>
+        </aside>
+      ) : null
+    }
+
     <article class="content-panel lecture-card lecture-detail-card">
       <div class="section-heading">
         <div class="panel-kicker">{lecture.data.date ?? "Kurzusanyag"}</div>

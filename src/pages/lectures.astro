@@ -26,6 +26,19 @@ const lectures = (await getCollection("lectures")).sort((left, right) => {
   </header>
 
   <main class="container site-main lectures-page">
+    {
+      lectures.length ? (
+        <aside class="floating-toc" aria-label="Lecture table of contents">
+          <div class="floating-toc-title">Eloadasok</div>
+          <nav>
+            {lectures.map((lecture) => (
+              <a href={`#lecture-${lecture.slug}`}>{lecture.data.title}</a>
+            ))}
+          </nav>
+        </aside>
+      ) : null
+    }
+
     <section class="content-panel lectures-hero">
       <div class="section-heading">
         <div class="panel-kicker">Lecture Archive</div>
@@ -41,7 +54,11 @@ const lectures = (await getCollection("lectures")).sort((left, right) => {
       lectures.length ? (
         <section class="lectures-grid" aria-label="Lecture list">
           {lectures.map((lecture) => (
-            <a class="content-panel lecture-card lecture-link-card" href={`/lectures/${lecture.slug}/`}>
+            <a
+              id={`lecture-${lecture.slug}`}
+              class="content-panel lecture-card lecture-link-card"
+              href={`/lectures/${lecture.slug}/`}
+            >
               <div class="section-heading">
                 <div class="panel-kicker">{lecture.data.date ?? "Kurzusanyag"}</div>
                 <h2>{lecture.data.title}</h2>
